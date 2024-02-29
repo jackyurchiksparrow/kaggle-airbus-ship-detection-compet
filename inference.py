@@ -238,9 +238,9 @@ if __name__ == "__main__":
 
     # ensure on warnings or errors if working on CPU, then load the best model weights
     if device == "cpu":
-        checkpoint = torch.load('/kaggle/working/strat_best_unet_5.pt', map_location=torch.device('cpu'))
+        checkpoint = torch.load(os.path.join("models", "model_2_sratified_unet_semantic_segmentation.pt"), map_location=torch.device('cpu'))
     else:
-        checkpoint = torch.load('/kaggle/working/strat_best_unet_5.pt')
+        checkpoint = torch.load(os.path.join("models", "model_2_sratified_unet_semantic_segmentation.pt"))
 
     # load imported weights into the model
     unet_model.load_state_dict(checkpoint)
