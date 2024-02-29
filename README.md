@@ -4,59 +4,59 @@
 
 ## **Table of contents** 
 
-1. [Introduction](#)
-    * [Project's objective](#)
-    * [The environment used](#)
-        * [Limitations](#)
-    * [Choice behind the framework](#)
-        * [Tensorflow](#)
-        * [PyTorch](#)
-        * [Chosen framework](#)
-    * [Technologies used](#)
-2. [Data description](#)
-3. [Data visualization](#)
-    * [Consistency in image sizes](#)
-    * [RLE decoding](#)
-    * [Class imbalance](#)
-4. [Data preprocessing](#)
-    * [Repeatability of `ImageId`s](#)
-    * [Handling `NaN`s](#)
-5. [Data cleaning](#)
-6. [Model selection](#)
-7. [Metrics choice](#)
-8. [Loss function choice](#)
-9. [Optimizer choice](#)
-10. [Data representation](#)
-11. [Implementation strategy (PyTorch)](#)
-    * [The class imbalance problem](#)
-12. [Initial guesses](#)
-    * [Learning rate](#)
-    * [Number of epochs](#)
-    * [Batch size](#)
-    * [Learning rate scheduler](#)
-    * [Image shape](#)
-    * [Augmentations](#)
-13. [Model training](#)
-    * [`ZERO_SHIPS_RATIO_PER_BATCH`](#)
-    * [Loss function](#)
-    * [Learning rate](#)
-    * [Batch size](#)
-    * [Augmentations](#)
-    * [Learning rate scheduler](#)
-14. [Model testing](#)
-    * [Choosing threshold](#)
-    * [Conclusions](#)
-15. [Improvements](#)
-    1. [Improvement 1st](#)
-        * [Results](#)
-        * [Choosing threshold](#)
-        * [Conclusions](#)
-    2. [Improvement 2nd](#)
-    3. [Improvement 3rd](#)
-    4. [Conclusion](#)
-16. [Project files' description](#)
-17. [Short models' reference](#)
-18. [About author](#)
+1. [Introduction](#introduction)
+    * [Project's objective](#projects-objective)
+    * [The environment used](#the-environment-used)
+        * [Limitations](#limitations)
+    * [Choice behind the framework](#choice-behind-the-framework)
+        * [Tensorflow](#tensorflow)
+        * [PyTorch](#pytorch)
+        * [Chosen framework](#chosen-framework)
+    * [Technologies used](#technologies-used)
+2. [Data description](#data-description)
+3. [Data visualization](#data-visualization)
+    * [Consistency in image sizes](#consistency-in-image-sizes)
+    * [RLE decoding](#rle-decoding)
+    * [Class imbalance](#class-imbalance)
+4. [Data preprocessing](#data-preprocessing)
+    * [Repeatability of `ImageId`s](#repeatability-of-imageids)
+    * [Handling `NaN`s](#handling-nans)
+5. [Data cleaning](#data-cleaning)
+6. [Model selection](#model-selection)
+7. [Metrics choice](#metrics-choice)
+8. [Loss function choice](#loss-function-choice)
+9. [Optimizer choice](#optimizer-choice)
+10. [Data representation](#data-representation)
+11. [Implementation strategy (PyTorch)](#implementation-strategy-pytorch)
+    * [The class imbalance problem](#the-class-imbalance-problem)
+12. [Initial guesses](#initial-guesses)
+    * [Learning rate](#learning-rate)
+    * [Number of epochs](#number-of-epochs)
+    * [Batch size](#batch-size)
+    * [Learning rate scheduler](#learning-rate-scheduler)
+    * [Image shape](#image-shape)
+    * [Augmentations](#augmentations)
+13. [Model training](#model-training)
+    * [`ZERO_SHIPS_RATIO_PER_BATCH` tuned](#zero_ships_ratio_per_batch-tuned)
+    * [Loss function tuned](#loss-function-tuned)
+    * [Learning rate tuned](#learning-rate-tuned)
+    * [Batch size tuned](#batch-size-tuned)
+    * [Augmentations tuned](#augmentations-tuned)
+    * [Learning rate scheduler tuned](#learning-rate-scheduler-tuned)
+14. [Model testing](#model-testing)
+    * [Choosing threshold](#choosing-threshold)
+    * [Conclusions](#conclusions)
+15. [Improvements](#improvements)
+    1. [Improvement 1st](#improvement-1st)
+        * [Results](#results)
+        * [Choosing threshold (mod. 1)](#choosing-threshold-mod-1)
+        * [Conclusion (mod. 1)](#conclusion-mod-1)
+    2. [Improvement 2nd](#improvement-2nd)
+    3. [Improvement 3rd](#improvement-3rd)
+    4. [Conclusion](#conclusion)
+16. [Project files' description](#project-files-description)
+17. [Short models' reference](#short-models-reference)
+18. [About author](#about-author)
 19. [References](#references)
 
 ## Introduction
@@ -266,7 +266,7 @@ albu.Compose([
 A popular `resnet18` `Unet` modification is chosen and its complexity has been researched. It may be simplified / complexed in [2nd](#improvement-2nd) or [3rd](#improvement-3rd) modification.
 
 
-### ZERO_SHIPS_RATIO_PER_BATCH
+### ZERO_SHIPS_RATIO_PER_BATCH tuned
 The very first parameter we want to get along with. I have considered undersampling of non-ship images. Firstly, we research the impact of the amount of non-ship images on the model's performance. Initial guess is `0.25` per batch of `16`:
 
 $
@@ -289,7 +289,7 @@ The best model's performance; plotted:
 
 The optimal value `ZERO_SHIPS_RATIO_PER_BATCH`= `0.0`.
 
-### Loss function
+### Loss function tuned
 The next issue to address is an issue of a high loss. Proceeding to try [different](#loss-function-choice) losses:
 
 |   Loss function    |   Dice   |  Loss    |
@@ -306,11 +306,11 @@ The best model's performance; plotted:
 ![Loss function chosen plot](src/image2.png)
 
 
-### Learning rate
+### Learning rate tuned
 The plot looks stunning to me, the learning rate remained untouched (`1e-4`).
 
 
-### Batch size
+### Batch size tuned
 The batch size of `16` seems to be perfectly in tact with the [model](#model-selection)'s complexity and the [learning rate](#learning-rate). To make sure we have the best possible performance at this stage, the batch size has been researched too:
 
 |   Batch size    |   Dice   |  Loss    |
@@ -325,7 +325,7 @@ The batch size remained untouched due to the fact that a batch size of `9` creat
 ![Batch size 9 overfit](src/image3.png)
 
 
-### Augmentations
+### Augmentations tuned
 It is hard to imagine a computer vision task without augmentations. The list of tried augmentations and their combinations:
 
 ```
@@ -346,7 +346,7 @@ albu.OpticalDistortion(distort_limit=0.5, shift_limit=0.5, p=0.5),
 None of them or their combinations has worked. I presume the conclusion behind this is the data's being wholesome and diverse. It combines beautifully with the model's complexity. This is also the reason why we don't consider simplifying or complexing the `resnet18` to anything else.
 
 
-### Learning rate scheduler
+### Learning rate scheduler tuned
 It is high time we maximized the score having tuned the parameters. I have summarized the trainings performed:
 
 |Model 1 (part 1)|               |                |                |                |            
@@ -450,11 +450,11 @@ The best `Dice`:`Loss` pair was `0.84761`:`0.17276`.
 ![improvement 1st; plotted; optimal](src/image8.png)
 
 
-#### Choosing threshold
+#### Choosing threshold (mod. 1)
 The option of `4e-4` has appeared to be the most optimal.
 
 
-#### Conclusion
+#### Conclusion (mod. 1)
 The second model results in identifying multiple ships more accurately, but more biased towards fewer-ship predictions. I have intentionally picked a slightly more overfit version (in terms of epochs) to address the issue of noise.
 
 I have summarized the trainings performed:
