@@ -697,5 +697,5 @@ if __name__ == "__main__":
     unet_model_train.continue_training(current_epoch=15, n_batch=BATCH_SIZE, n_epochs=N_EPOCHS, optimizer=optimizer, loss_fn=loss_fn, metric_fn=metric_fn, scheduler=SCHEDULER)
 
     # save the model
-    unet_model_train.save_model('unet_semantic_segmentation.pt')
+    unet_model_train.save_model(os.path.join("model", "model_2_sratified_unet_semantic_segmentation.pt"))
     print("The training is finished")
