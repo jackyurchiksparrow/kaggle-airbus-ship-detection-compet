@@ -106,7 +106,7 @@ Given the preference for exploring new ideas and ensuring reproducibility on GPU
 ### Technologies used
 All of the instruments used are popular and well-known. I suggest we look at them as a code for convenience:
 
-```
+```python
 import os                       # interacting with the operating system
 import sys                      # interacting with the Python interpreter
 import pandas as pd             # For data manipulation and analysis
@@ -254,7 +254,7 @@ Due to the Kaggle's [restrictions](#limitations), images being researched were d
 ### Augmentations
 They are applied as a matter of regularization for the model in case of overfit or to provide more diversity to an existing dataset by altering the appearance of some images. Initially (and later on), the following augmentations are used:
 
-```
+```python
 albu.Compose([
     albu.Resize(*INPUT_SIZE),   # resize to (256,256)
     albu.Normalize(),           # normalizes the dataset according to the imagenet's mean and std
@@ -328,7 +328,7 @@ The batch size remained untouched due to the fact that a batch size of `9` creat
 ### Augmentations tuned
 It is hard to imagine a computer vision task without augmentations. The list of tried augmentations and their combinations:
 
-```
+```python
 albu.RandomRotate90(p=0.5),
 albu.HorizontalFlip(p=0.5),
 albu.VerticalFlip(p=0.5),
